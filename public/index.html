@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chat • Love</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="join-screen" class="screen">
+      <div class="card">
+        <h1>Join Chat</h1>
+        <form id="join-form">
+          <input id="username" type="text" placeholder="Choose a username" minlength="1" maxlength="30" required />
+          <input id="avatar-file" type="file" accept="image/*" />
+          <button type="submit">Join</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="chat-screen" class="chat hidden">
+      <header class="topbar">
+        <div class="left">
+          <button id="back" class="icon-btn" title="Back" aria-label="Back">&#8592;</button>
+          <span class="room-icon" aria-hidden="true">❤</span>
+          <span class="room-title">love</span>
+        </div>
+        <div class="right">
+          <span class="msg-count"><span class="icon" aria-hidden="true">👥</span> <span id="message-count">0</span> messages</span>
+          <button id="settings-btn" class="icon-btn" title="Appearance and profile" aria-label="Settings">⚙️</button>
+        </div>
+      </header>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <main class="viewport">
+        <div id="messages" class="messages" aria-live="polite"></div>
+        <div id="typing" class="typing hidden"></div>
+      </main>
+
+      <form id="composer" class="composer" autocomplete="off">
+        <input type="file" id="file-input" accept="image/*,image/gif,.gif,video/*,audio/*" hidden />
+        <button type="button" id="attach-btn" class="icon-btn" title="Attach photo, video, audio or GIF" aria-label="Attach">📎</button>
+        <button type="button" id="mic-btn" class="icon-btn" title="Record voice note" aria-label="Record">🎤</button>
+        <input id="message-input" type="text" placeholder="Type your message..." />
+        <button type="submit" id="send-btn" class="icon-btn primary" title="Send" aria-label="Send">🛩</button>
+      </form>
+
+      <section id="settings" class="settings hidden" aria-label="Settings">
+        <div class="settings-content">
+          <h3>Appearance</h3>
+          <label class="row">Background color <input type="color" id="bg-color" value="#120606" /></label>
+          <label class="row">Background image <input type="file" id="bg-image-file" accept="image/*" /></label>
+          <label class="row">Background fit
+            <select id="bg-fit">
+              <option value="contain" selected>Fit (show full image)</option>
+              <option value="cover">Fill (crop to cover)</option>
+            </select>
+          </label>
+          <button type="button" id="bg-clear" class="icon-btn">Clear image</button>
+          <h3>Profile</h3>
+          <label class="row">Profile photo <input type="file" id="profile-file" accept="image/*" /></label>
+          <button type="button" id="settings-close" class="icon-btn">Close</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js" defer></script>
+  </body>
+</html>
+
