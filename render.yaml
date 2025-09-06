@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: connected-ur
+    env: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    autoDeploy: true
+    region: oregon
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+
