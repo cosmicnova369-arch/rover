@@ -78,7 +78,10 @@ body {
 .topbar {
   position: sticky; top: 0; z-index: 10;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 18px; background: linear-gradient(90deg, rgba(124,77,255,0.25), rgba(255,77,113,0.12)); border-bottom: 1px solid #2b1212; backdrop-filter: blur(6px);
+  padding: 14px 18px;
+  background: transparent; /* transparent header */
+  border-bottom: none;
+  backdrop-filter: none;
 }
 .topbar .left { display: inline-flex; align-items: center; gap: 12px; }
 .topbar .right { color: var(--muted); font-size: 14px; }
