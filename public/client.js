@@ -111,15 +111,20 @@
     stopTypingSoon();
   });
 
-  // Typing indicator
+  // Typing indicator (throttled)
   let typingTimer;
+  let lastTypingEmit = 0;
   messageInput.addEventListener('input', () => {
-    socket.emit('typing', true);
+    const now = Date.now();
+    if (now - lastTypingEmit > 500) {
+      socket.emit('typing', true);
+      lastTypingEmit = now;
+    }
     stopTypingSoon();
-  });
+  }, { passive: true });
   function stopTypingSoon() {
     if (typingTimer) clearTimeout(typingTimer);
-    typingTimer = setTimeout(() => socket.emit('typing', false), 800);
+    typingTimer = setTimeout(() => socket.emit('typing', false), 900);
   }
 
   // Attach: open file picker
@@ -359,6 +364,7 @@
     if (m.type === 'image') {
       const img = document.createElement('img');
       img.src = m.url; img.alt = 'image';
+      img.loading = 'lazy';
       bubble.appendChild(img);
     } else if (m.type === 'video') {
       const vid = document.createElement('video');
@@ -436,7 +442,11 @@
     }
 
     messagesEl.appendChild(row);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+    // Only auto-scroll if user is near bottom
+    const nearBottom = (messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight) < 80;
+    if (nearBottom) {
+      requestAnimationFrame(() => { messagesEl.scrollTop = messagesEl.scrollHeight; });
+    }
   }
 
   function addSystemMessage(text) {

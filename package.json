@@ -10,8 +10,11 @@
   },
   "author": "",
   "license": "MIT",
-  "engines": { "node": ">=20 <23" },
+  "engines": {
+    "node": ">=20 <23"
+  },
   "dependencies": {
+    "compression": "^1.8.1",
     "express": "^5.1.0",
     "multer": "^2.0.2",
     "socket.io": "^4.8.1"

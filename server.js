@@ -7,6 +7,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const multer = require("multer");
+const compression = require("compression");
 
 const app = express();
 const server = http.createServer(app);
@@ -14,15 +15,16 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
-// Static assets
-app.use(express.static(path.join(__dirname, "public")));
-// JSON body parser for prefs API
-app.use(express.json({ limit: "1mb" }));
+// Performance: gzip/deflate compression
+app.use(compression());
+
+// Static assets with long-term caching
+app.use(express.static(path.join(__dirname, "public"), { maxAge: "1y", immutable: true }));
 
 // File uploads setup
 const uploadsDir = path.join(__dirname, "uploads");
 fs.mkdirSync(uploadsDir, { recursive: true });
-app.use("/uploads", express.static(uploadsDir, { maxAge: "1y" }));
+app.use("/uploads", express.static(uploadsDir, { maxAge: "7d" }));
 
 function extFromMime(m) {
   if (!m || typeof m !== "string") return "";
