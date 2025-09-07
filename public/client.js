@@ -44,11 +44,25 @@
     const name = usernameInput.value.trim();
     if (!name) return usernameInput.focus();
 
-    // Upload avatar if provided
+    // Optimistic UI: show chat immediately
+    myName = name;
+    joinScreen.classList.add('hidden');
+    chatScreen.classList.remove('hidden');
+    messageInput?.focus();
+    showToast('Connecting...');
+
+    // Start avatar upload in background (non-blocking)
     let avatarUrl = null;
     const f = avatarFile?.files?.[0];
     if (f) {
-      try { const info = await uploadFile(f); avatarUrl = info?.url || null; } catch (_) { avatarUrl = null; }
+      uploadFile(f).then((info) => {
+        const url = info?.url;
+        if (url) {
+          myAvatarUrl = url;
+          socket.emit('update_avatar', url);
+          savePrefs({ avatarUrl: url });
+        }
+      }).catch(() => {});
     }
 
     pendingJoin = { name, avatarUrl };
@@ -65,18 +79,15 @@
     const { name, avatarUrl } = pendingJoin;
     let timedOut = false;
     const to = setTimeout(() => { timedOut = true; showToast('Join taking longer...'); }, 4000);
-    socket.emit('join', { name, avatarUrl }, async (resp) => {
+    socket.emit('join', { name, avatarUrl }, (resp) => {
       clearTimeout(to);
       if (timedOut) return; // late ack, ignore
       const ok = resp === true || (resp && resp.ok);
-      if (!ok) { alert('Join failed'); return; }
+      if (!ok) { showToast('Failed to join'); return; }
       const serverPrefs = (resp && resp.prefs) || {};
       joined = true; myName = name; myAvatarUrl = avatarUrl || serverPrefs.avatarUrl || myAvatarUrl;
       pendingJoin = null;
-      joinScreen.classList.add('hidden');
-      chatScreen.classList.remove('hidden');
-      messageInput?.focus();
-      // Apply server prefs and mirror into localStorage
+      // Apply server prefs and mirror into localStorage (non-blocking)
       if (serverPrefs.bgColor) {
         document.documentElement.style.setProperty('--bg', serverPrefs.bgColor);
         localStorage.setItem('chat.bgColor', serverPrefs.bgColor);
@@ -89,8 +100,8 @@
         if (bgFitInput) bgFitInput.value = fit;
       }
       showToast(`Joined as ${name}`);
-      // Load history once joined
-      await loadHistory(300);
+      // Load history after UI is already active (no await)
+      loadHistory(200);
     });
   }
 
