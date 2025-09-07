@@ -34,6 +34,7 @@ body {
   place-items: center;
   padding: 24px;
 }
+#join-title { margin: 40px 0 16px; font-size: 28px; font-weight: 800; letter-spacing: .2px; }
 .card {
   background: var(--panel);
   border: 1px solid #2b1212;
@@ -43,25 +44,33 @@ body {
   width: 100%;
   max-width: 420px;
 }
-#join-form { display: flex; gap: 12px; }
-#join-form input {
+.card.join { padding: 28px; }
+.label { display: block; font-size: 14px; font-weight: 700; color: var(--muted); margin: 0 0 6px 2px; }
+.join-form { display: grid; gap: 14px; }
+#join-form input, .join-form input {
   flex: 1;
   padding: 12px 14px;
-  background: #140707;
-  border: 1px solid #2b1212;
+  background: #23252a;
+  border: 1px solid #2f3440;
   border-radius: 10px;
   color: var(--text);
   font-size: 16px; /* prevent mobile auto-zoom */
 }
-#join-form button {
-  padding: 12px 16px;
+#join-form button, .btn-continue {
+  padding: 14px 16px;
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(124,77,255,0.35);
 }
+.btn-continue:active { transform: translateY(1px); }
+.legal { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
+.legal a { color: var(--muted); text-decoration: none; }
+.legal a:hover { color: #fff; text-decoration: underline; }
 
 /* Chat layout */
 .chat { display: grid; grid-template-rows: auto 1fr auto; height: 100dvh; height: 100vh; }
