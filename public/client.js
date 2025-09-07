@@ -111,9 +111,12 @@
     stopTypingSoon();
   });
 
-  // Typing indicator
+  // Typing indicator & toggle send FAB
   let typingTimer;
+  const sendBtn = document.getElementById('send-btn');
   messageInput.addEventListener('input', () => {
+    const hasText = messageInput.value.trim().length > 0;
+    if (sendBtn) sendBtn.classList.toggle('show', hasText);
     socket.emit('typing', true);
     stopTypingSoon();
   });
@@ -334,8 +337,22 @@
   }
 
   // Rendering
+  let lastDateKey = null;
   function renderMessage(m) {
     const isMe = myName && m.username === myName;
+
+    // Insert date separator when day changes
+    const ts = m.timestamp || Date.now();
+    const d = new Date(ts);
+    const key = d.toDateString();
+    if (lastDateKey !== key) {
+      const sep = document.createElement('div');
+      sep.className = 'date-sep';
+      sep.textContent = d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+      messagesEl.appendChild(sep);
+      lastDateKey = key;
+    }
+
     const row = document.createElement('div');
     row.className = `msg ${isMe ? 'me' : 'them'}`;
     if (m.id) row.dataset.id = m.id;
@@ -420,8 +437,8 @@
 
     const time = document.createElement('span');
     time.className = 'time';
-    time.textContent = formatTime(m.timestamp || Date.now());
-    bubble.appendChild(time);
+    time.textContent = formatTime(ts);
+    bubble.prepend(time);
 
     if (isMe && m.id) {
       addDeleteControls(bubble, m);

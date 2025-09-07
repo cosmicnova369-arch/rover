@@ -72,6 +72,10 @@ body {
 .legal a { color: var(--muted); text-decoration: none; }
 .legal a:hover { color: #fff; text-decoration: underline; }
 
+/* Floating send button */
+#send-btn { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); width: 56px; height: 56px; border-radius: 16px; background: var(--accent); color: #fff; border: none; box-shadow: 0 10px 24px rgba(124,77,255,0.35); opacity: 0; pointer-events: none; transform: translateY(6px) scale(.95); transition: all .18s ease; }
+#send-btn.show { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+
 /* Chat layout */
 .chat { display: grid; grid-template-rows: auto 1fr auto; height: 100dvh; height: 100vh; }
 .topbar {
@@ -93,33 +97,33 @@ body {
   height: 100%;
   overflow-y: auto;
   padding: 18px 14px 12px 14px;
-  display: flex; flex-direction: column; gap: 18px;
+  display: flex; flex-direction: column; gap: 12px;
   scroll-behavior: smooth;
+  background-color: #000;
 }
 
-/* Message item */
-.msg { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: end; animation: fadeUp .18s ease both; }
-.msg.me { grid-template-columns: 1fr 40px; }
+/* Message item - minimal lines */
+.msg { display: grid; grid-template-columns: 1fr; gap: 0; align-items: start; animation: fadeUp .18s ease both; }
+.msg.me { grid-template-columns: 1fr; }
 .msg .bubble { position: relative; }
 .msg .bubble .delete-btn { position: absolute; top: -10px; right: -10px; background: rgba(0,0,0,0.35); color: white; border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer; display: none; }
 .msg.me .bubble:hover .delete-btn { display: inline-grid; place-items: center; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; background: #2b1212; display: grid; place-items: center; font-weight: 700; color: #ffdada; border: 1px solid #3a1515; overflow: hidden; }
-.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar { display: none; }
 
 .bubble {
-  max-width: min(75%, 520px);
-  padding: 10px 12px;
-  border-radius: 18px;
-  background: var(--bubble);
-  box-shadow: var(--bubble-shadow);
-  color: #fff;
+  max-width: 100%;
+  padding: 2px 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #e7e7e7;
 }
-.msg.me .bubble { margin-left: auto; border-bottom-right-radius: 6px; }
-.msg.them .bubble { border-bottom-left-radius: 6px; }
+.msg.me .bubble { margin-left: 0; }
+.msg.them .bubble { }
 
-.bubble .time { display: block; font-size: 12px; opacity: 0.9; text-align: right; margin-top: 6px; }
-.bubble .text { white-space: pre-wrap; word-wrap: break-word; }
-.bubble img { max-width: min(300px, 90vw); width: 100%; height: auto; border-radius: 12px; display: block; }
+.bubble .time { display: inline-block; font-size: 12px; opacity: 0.65; color: #a8a8a8; margin-right: 8px; min-width: 42px; }
+.bubble .text { white-space: pre-wrap; word-wrap: break-word; display: inline; }
+.bubble img { max-width: min(300px, 90vw); width: 100%; height: auto; border-radius: 12px; display: block; margin: 4px 0; }
 .bubble video { max-width: min(360px, 90vw); border-radius: 12px; display: block; }
 .bubble audio { width: 100%; }
 .bubble.voice { background: var(--bubble); }
@@ -128,6 +132,12 @@ body {
 .bubble .audio .track { position: relative; width: 100%; height: 6px; background: rgba(255,255,255,0.25); border-radius: 999px; overflow: hidden; }
 .bubble .audio .track .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #fff; }
 .bubble .audio .timewrap { display: grid; grid-auto-flow: column; gap: 6px; font-size: 12px; opacity: 0.9; }
+
+/* Date separator */
+.date-sep { color: #a0a0a0; font-size: 12px; text-align: center; margin: 14px 0; position: relative; }
+.date-sep::before, .date-sep::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(255,255,255,0.15); }
+.date-sep::before { left: 0; }
+.date-sep::after { right: 0; }
 
 /* Typing */
 .typing { color: var(--muted); font-size: 13px; padding: 0 18px 8px; }
